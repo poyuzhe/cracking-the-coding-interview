@@ -1,0 +1,3 @@
+rootProject.name = 'cracking-the-coding-interview'
+include 'arrays-and-strings'
+
