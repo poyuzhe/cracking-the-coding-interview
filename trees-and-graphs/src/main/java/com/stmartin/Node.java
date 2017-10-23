@@ -27,6 +27,10 @@ public class Node {
         this.children.add(child);
     }
 
+    public void removeChild(Node child) {
+        this.children.remove(child);
+    }
+
     public void addProperty(String key, String name) {
         properties.put(key, name);
     }

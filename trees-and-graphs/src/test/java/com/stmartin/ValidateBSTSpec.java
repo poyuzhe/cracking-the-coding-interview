@@ -3,11 +3,15 @@ package com.stmartin;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static com.stmartin.ValidateBST.*;
 
 /**
- * Created by shentong on 2017/10/20.
+ * Created by shentong on 2017/10/23.
+ * spec:
+ * 1. input is a binary tree node.
+ * 2. output is a boolean value checking whether the binary tree is a binary search tree.
  */
-public class BinaryTreeNodeSpec {
+public class ValidateBSTSpec {
     private BinaryTreeNode binarySearchTreeRoot;
     private BinaryTreeNode nonBinarySearchTreeRoot;
     @Before
@@ -16,7 +20,7 @@ public class BinaryTreeNodeSpec {
         binarySearchTreeRoot.leftChild = new BinaryTreeNode(2);
         binarySearchTreeRoot.rightChild = new BinaryTreeNode(7);
         binarySearchTreeRoot.leftChild.leftChild = new BinaryTreeNode(1);
-        binarySearchTreeRoot.leftChild.rightChild = new BinaryTreeNode(3);
+        binarySearchTreeRoot.leftChild.rightChild = new BinaryTreeNode(4);
         binarySearchTreeRoot.rightChild.leftChild = new BinaryTreeNode(6);
         binarySearchTreeRoot.rightChild.rightChild = new BinaryTreeNode(8);
 
@@ -30,29 +34,32 @@ public class BinaryTreeNodeSpec {
     }
 
     @Test
-    public void testHeightBelow() {
-        assertEquals(3, binarySearchTreeRoot.heightBelow());
-        assertEquals(4, nonBinarySearchTreeRoot.heightBelow());
+    public void whenBSTThenTrue() {
+        assertTrue(isBinarySearchTree(binarySearchTreeRoot));
     }
 
     @Test
-    public void testMaxSubtreeValue() {
-        assertEquals(8, binarySearchTreeRoot.getMaxSubTreeValue());
+    public void whenNotBSTThenFalse() {
+        assertFalse(isBinarySearchTree(nonBinarySearchTreeRoot));
     }
 
     @Test
-    public void testIsBinarySearchTree() {
-        assertTrue(binarySearchTreeRoot.isBinarySearchTree());
-        assertFalse(nonBinarySearchTreeRoot.isBinarySearchTree());
+    public void whenBSTThenTrueRange() {
+        assertTrue(isBinarySearchTreeRange(binarySearchTreeRoot));
     }
 
     @Test
-    public void whenIsBalancedThenBalanced() {
-        assertTrue(binarySearchTreeRoot.isBalanced().isBalanced);
+    public void whenNotBSTThenFalseRange() {
+        assertFalse(isBinarySearchTreeRange(nonBinarySearchTreeRoot));
     }
 
     @Test
-    public void whenNotBalancedThenNotBalanced() {
-        assertFalse(nonBinarySearchTreeRoot.isBalanced().isBalanced);
+    public void whenBSTThenTrueMinMax() {
+        assertTrue(isBinarySearchTreeMinMax(binarySearchTreeRoot));
+    }
+
+    @Test
+    public void whenNotBSTThenFalseMinMax() {
+        assertFalse(isBinarySearchTreeMinMax(nonBinarySearchTreeRoot));
     }
 }
