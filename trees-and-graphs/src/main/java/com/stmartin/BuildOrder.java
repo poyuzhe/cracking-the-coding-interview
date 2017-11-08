@@ -20,18 +20,12 @@ import java.util.Map;
  */
 class BuildOrder {
     static List<String> getBuildOrder(List<String> projects, List<String[]> dependencies) {
-        Map<String, Node> projectNodeMap = new HashMap<>();
-        for (String project : projects) {
-            projectNodeMap.put(project, new Node(project));
-        }
-        for (String[] dependency : dependencies) {
-            Node dependent = projectNodeMap.get(dependency[1]);
-            Node dependentOn = projectNodeMap.get(dependency[0]);
-            dependent.addChild(dependentOn);
-        }
+        Map<String, Node> projectNodeMap = createNodeMapFromProjects(projects, dependencies);
         List<String> buildOrder = new ArrayList<>();
         List<Node> projectNodes = new ArrayList<>(projectNodeMap.values());
+        boolean builtNode = false;
         while (buildOrder.size() < projectNodes.size()) {
+            builtNode = false;
             for (Node project : projectNodes) {
                 if (null == project.getProperty("built")) {
                     int nonBuiltChild = project.children.size();
@@ -43,10 +37,62 @@ class BuildOrder {
                     if (nonBuiltChild == 0) {
                         buildOrder.add(project.name);
                         project.addProperty("built", "true");
+                        builtNode = true;
                     }
                 }
             }
+            if (!builtNode) {
+                return null;
+            }
         }
         return buildOrder;
+    }
+
+    static List<String> getBuildOrderDepthFirst(List<String> projects, List<String[]> dependencies) {
+        Map<String, Node> projectNodeMap = createNodeMapFromProjects(projects, dependencies);
+        List<String> buildOrder = new ArrayList<>();
+        List<Node> projectNodes = new ArrayList<>(projectNodeMap.values());
+        for (Node project : projectNodes) {
+            if (!depthFirstTraversal(project, buildOrder)) {
+                return null;
+            }
+        }
+        return buildOrder;
+    }
+
+    private static boolean depthFirstTraversal(Node project, List<String> buildOrder) {
+        if ("completed".equals(project.getProperty("status"))) {
+            return true;
+        }
+        if ("partial".equals(project.getProperty("status"))) {
+            return false;
+        }
+        project.addProperty("status", "partial");
+        if (project.children == null || project.children.size() == 0) {
+            buildOrder.add(project.name);
+            project.addProperty("status", "completed");
+            return true;
+        }
+        for (Node child : project.children) {
+            if (!depthFirstTraversal(child, buildOrder)) {
+                return false;
+            }
+        }
+        buildOrder.add(project.name);
+        project.addProperty("status", "completed");
+        return true;
+    }
+
+    private static Map<String, Node> createNodeMapFromProjects(List<String> projects, List<String[]> dependencies) {
+        Map<String, Node> projectNodeMap = new HashMap<>();
+        for (String project : projects) {
+            projectNodeMap.put(project, new Node(project));
+        }
+        for (String[] dependency : dependencies) {
+            Node dependent = projectNodeMap.get(dependency[1]);
+            Node dependentOn = projectNodeMap.get(dependency[0]);
+            dependent.addChild(dependentOn);
+        }
+        return projectNodeMap;
     }
 }

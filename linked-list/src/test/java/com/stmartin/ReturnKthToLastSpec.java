@@ -24,9 +24,4 @@ public class ReturnKthToLastSpec {
         original.add("me");
         original.add("too");
     }
-
-    @Test
-    public void whenNullListThenReturnNull {
-
-    }
 }

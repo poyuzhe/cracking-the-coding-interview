@@ -17,11 +17,13 @@ import java.util.List;
 public class BuildOrderSpec {
     private List<String> projects;
     private List<String[]> dependencies;
+    private List<String[]> wrongDependencies;
 
     @Before
     public void setUp() {
         projects = new ArrayList<>();
         dependencies = new ArrayList<>();
+        wrongDependencies = new ArrayList<>();
 
         projects.add("a");
         projects.add("b");
@@ -35,6 +37,10 @@ public class BuildOrderSpec {
         dependencies.add(new String[]{"b","d"});
         dependencies.add(new String[]{"f","a"});
         dependencies.add(new String[]{"d","c"});
+
+        wrongDependencies.add(new String[]{"a","b"});
+        wrongDependencies.add(new String[]{"b","c"});
+        wrongDependencies.add(new String[]{"c","a"});
     }
 
     @Test
@@ -46,5 +52,26 @@ public class BuildOrderSpec {
         assertEquals(buildOrder.get(3), "b");
         assertEquals(buildOrder.get(4), "d");
         assertEquals(buildOrder.get(5), "c");
+    }
+
+    @Test
+    public void testBuildOrderDepthFirst() {
+        List<String> buildOrder = getBuildOrderDepthFirst(projects, dependencies);
+        assertEquals(buildOrder.get(0), "f");
+        assertEquals(buildOrder.get(1), "a");
+        assertEquals(buildOrder.get(2), "b");
+        assertEquals(buildOrder.get(3), "d");
+        assertEquals(buildOrder.get(4), "c");
+        assertEquals(buildOrder.get(5), "e");
+    }
+
+    @Test
+    public void whenWrongDependenciesThenNullBuildOrder() {
+        assertEquals(null, getBuildOrder(projects, wrongDependencies));
+    }
+
+    @Test
+    public void whenWrongDependenciesThenNullBuildOrderDepthFirst() {
+        assertEquals(null, getBuildOrderDepthFirst(projects, wrongDependencies));
     }
 }
