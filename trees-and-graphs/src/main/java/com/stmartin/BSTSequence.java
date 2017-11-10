@@ -30,10 +30,7 @@ class BSTSequence {
         if (leftSequences == null || rightSequences == null) {
             List<int[]> nonNullSequences = leftSequences == null ? rightSequences : leftSequences;
             for (int[] sequence : nonNullSequences) {
-                int[] thisSequence = new int[sequence.length + 1];
-                thisSequence[0] = root.name;
-                System.arraycopy(sequence, 0, thisSequence, 1, sequence.length);
-                thisSequences.add(thisSequence);
+                thisSequences.add(createNewArrayByAddHead(sequence, root.name));
             }
             return thisSequences;
         }
@@ -41,10 +38,7 @@ class BSTSequence {
             for (int[] rightSequence : rightSequences) {
                 List<int[]> childSequences = generateSequences(leftSequence, rightSequence);
                 for (int[] childSequence : childSequences) {
-                    int[] thisSequence = new int[childSequence.length + 1];
-                    thisSequence[0] = root.name;
-                    System.arraycopy(childSequence, 0, thisSequence, 1, childSequence.length);
-                    thisSequences.add(thisSequence);
+                    thisSequences.add(createNewArrayByAddHead(childSequence, root.name));
                 }
             }
         }
@@ -64,17 +58,18 @@ class BSTSequence {
         List<int[]> sequence1First = generateSequences(Arrays.copyOfRange(sequence1, 1, sequence1.length), sequence2);
         List<int[]> sequence2First = generateSequences(sequence1, Arrays.copyOfRange(sequence2, 1, sequence2.length));
         for (int[] sequence : sequence1First) {
-            int[] newSequence = new int[sequence.length + 1];
-            newSequence[0] = sequence1[0];
-            System.arraycopy(sequence, 0, newSequence, 1, sequence.length);
-            result.add(newSequence);
+            result.add(createNewArrayByAddHead(sequence, sequence1[0]));
         }
         for (int[] sequence : sequence2First) {
-            int[] newSequence = new int[sequence.length + 1];
-            newSequence[0] = sequence2[0];
-            System.arraycopy(sequence, 0, newSequence, 1, sequence.length);
-            result.add(newSequence);
+            result.add(createNewArrayByAddHead(sequence, sequence2[0]));
         }
         return result;
+    }
+
+    static private int[] createNewArrayByAddHead(int[] oldArray, int head) {
+        int[] newArray = new int[oldArray.length + 1];
+        newArray[0] = head;
+        System.arraycopy(oldArray, 0, newArray, 1, oldArray.length);
+        return newArray;
     }
 }
