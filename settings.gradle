@@ -3,4 +3,5 @@ include 'arrays-and-strings'
 include 'stacks-and-queues'
 include 'linked-list'
 include 'trees-and-graphs'
+include 'bit-manipulation'
 
