@@ -8,10 +8,28 @@ package com.stmartin;
  */
 class PairwiseSwap {
     static int pairwiseSwap(int input) {
-        throw new RuntimeException();
+        for (int i = 0; i < 32; i += 2) {
+            input = swapTwoBits(input, i, i+1);
+        }
+        return input;
     }
 
-    static private void swapTwoBits(int input, int index1, int index2) {
-
+    static private int swapTwoBits(int input, int index1, int index2) {
+        // acquire the value of the index1
+        int bitOfIndex1 = (input & (1 << index1)) == 0 ? 0 : 1;
+        // acquire the value of the index2
+        int bitOfIndex2 = (input & (1 << index2)) == 0 ? 0 : 1;
+        // set the value of the index1 to the value of index2
+        if (bitOfIndex2 != bitOfIndex1) {
+            if (bitOfIndex2 == 1) {
+                input = input | (1 << index1);
+                input = input ^ (1 << index2);
+            } else {
+                input = input | (1 << index2);
+                input = input ^ (1 << index1);
+            }
+        }
+        return input;
+        // set the value of the index2 to the value of index1
     }
 }

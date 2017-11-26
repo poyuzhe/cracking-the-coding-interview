@@ -21,7 +21,7 @@ public class PairwiseSwapSpec {
     @Before
     public void setUp() {
         input = 21;
-        output = 10;
+        output = 42;
     }
 
     @Test
