@@ -28,4 +28,9 @@ public class PairwiseSwapSpec {
     public void swapPairwiseTest() {
         assertEquals(output, pairwiseSwap(input));
     }
+
+    @Test
+    public void swapPairwiseEfficientTest() {
+        assertEquals(output, pairwiseSwapEfficient(input));
+    }
 }
