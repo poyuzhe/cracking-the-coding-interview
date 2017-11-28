@@ -14,6 +14,10 @@ class PairwiseSwap {
         return input;
     }
 
+    static int pairwiseSwapEfficient(int input) {
+        return (input & 0xaaaaaaaa) >>> 1 | (input & 0x55555555) << 1;
+    }
+
     static private int swapTwoBits(int input, int index1, int index2) {
         // acquire the value of the index1
         int bitOfIndex1 = (input & (1 << index1)) == 0 ? 0 : 1;
